@@ -15,13 +15,20 @@ import { Mech } from '../../models/mech'
 })
 export class MechPage {
   mech:Mech
+  isEdit:boolean
 
   constructor(public navCtrl: NavController, public navParams: NavParams) {
     this.mech = navParams.get('selectedMech');
+    this.isEdit = false;
   }
 
   ionViewDidLoad() {
     console.log('ionViewDidLoad MechPage');
+  }
+
+  editMode(isEdit:boolean){
+    console.log(isEdit)
+    this.isEdit = isEdit;
   }
 
 }
