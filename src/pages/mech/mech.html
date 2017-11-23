@@ -57,22 +57,11 @@
       <ion-label stacked>O&M:</ion-label>
       <ion-input [readonly]="!isEdit" [(ngModel)]="mech.projectCode"></ion-input>
     </ion-item>
-    <button ion-item (click)="showReportAction()">Send Report</button>
+    <button ion-item (click)="sendReportActionSheet()">Send Report</button>
+    <button ion-item (click)="showReportActionSheet()">Show Report</button>
     <ion-item>
       
     </ion-item>
 
   </ion-list>
-  <ion-footer>
-    <ion-grid>
-      <ion-row>
-        <ion-col>
-          <button ion-button block>Check Report</button>
-        </ion-col>
-        <ion-col>
-          <button ion-button block>Repair Report</button>
-        </ion-col>
-      </ion-row>
-    </ion-grid>
-  </ion-footer>
 </ion-content>
