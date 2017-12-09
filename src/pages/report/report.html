@@ -16,6 +16,11 @@
 </ion-header>
 
 
-<ion-content padding>
-
+<ion-content>
+<ion-item-group>
+  <ion-item-divider color="light">Today Overdue</ion-item-divider>
+  <ion-item ion-item *ngFor="let item of todayList" (click)="itemSelected(item)">Mechine ID: {{item.id}}</ion-item>
+  <ion-item-divider color="light">Soon Overdue</ion-item-divider>
+  <ion-item ion-item *ngFor="let item of soonList" (click)="itemSelected(item)">Mechine ID: {{item.id}}</ion-item>
+</ion-item-group>
 </ion-content>

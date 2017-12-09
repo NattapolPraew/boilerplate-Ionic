@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController} from 'ionic-angular';
+import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
 /**
- * Generated class for the ListReportPage page.
+ * Generated class for the ItemListPage page.
  *
  * See https://ionicframework.com/docs/components/#navigation for more info on
  * Ionic pages and navigation.
@@ -10,28 +10,28 @@ import { IonicPage, NavController, NavParams, ViewController} from 'ionic-angula
 
 @IonicPage()
 @Component({
-  selector: 'page-list-report',
-  templateUrl: 'list-report.html',
+  selector: 'page-item-list',
+  templateUrl: 'item-list.html',
 })
-export class ListReportPage {
+export class ItemListPage {
+
   title:string
-  listReport:Array<any>
+  list:Array<any>
 
   constructor(public navCtrl: NavController, public navParams: NavParams, public viewCtrl: ViewController) {
     this.title = navParams.get("title")
-    this.listReport = navParams.get("listReport")
+    this.list = navParams.get("list")
   }
 
   ionViewDidLoad() {
-    console.log('ionViewDidLoad ListReportPage');
+    console.log('ionViewDidLoad ItemListPage');
   }
 
-  selectReport(report:any) {
+  select(report:any) {
     this.viewCtrl.dismiss(report)
   }
 
   cancel() {
     this.viewCtrl.dismiss()
   }
-
 }
