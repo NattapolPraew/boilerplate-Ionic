@@ -30,7 +30,8 @@ export class MyApp {
       { title: 'Home', component: 'HomePage' },
       { title: 'Reports', component: 'ReportPage' },
       { title: 'Profile', component: 'ProfilePage' },
-      { title: 'Logout', component: 'LoginPage' }
+      { title: 'Logout', component: 'LoginPage' },
+      { title: 'Calendar', component: 'CalendarPage' }
     ];
   }
 
