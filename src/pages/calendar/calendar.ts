@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Mech } from '../../models/mech';
 
 /**
  * Generated class for the CalendarPage page.
@@ -14,132 +15,64 @@ import { IonicPage, NavController, NavParams } from 'ionic-angular';
   templateUrl: 'calendar.html',
 })
 export class CalendarPage {
-    selectedDay = new Date()
-    selectedObject
-    eventSource = []
-    viewTitle;
-    isToday: boolean;
-    calendarModes = [
-      { key: 'month', value: 'Month' },
-      { key: 'week', value: 'Week' },
-      { key: 'day', value: 'Day' },
-    ]
-    calendar:any // these are the variable used by the calendar.
-    constructor(public navCtrl: NavController) {
-      this.calendar = {
-        mode: this.calendarModes[0].key,
-        currentDate: new Date()
-      };
-      // this.markDisabled(new Date(2017, 12, 25))
+  mechList:Array<Mech>
+  viewTitle:String
+  calendar:any
+
+  constructor(public navCtrl: NavController, public navParams: NavParams) {
+    this.calendar = {
+      currentDate: new Date(),
+      locale: 'en-US'
     }
-  
-    loadEvents() {
-      //this.eventSource = this.createRandomEvents();
+  }
+
+  onViewTitleChanged(title) {
+    this.viewTitle = title;
+  }
+
+  ionViewDidLoad() {
+    console.log('ionViewDidLoad LoginPage');
+  }
+
+  loadEvents() {
+    this.mechList = this.createRandomEvents();
+  }
+
+
+  createRandomEvents() {
+    var events = [];
+    for (var i = 0; i < 50; i += 1) {
+        var date = new Date();
+        var eventType = Math.floor(Math.random() * 2);
+        var startDay = Math.floor(Math.random() * 90) - 45;
+        var endDay = Math.floor(Math.random() * 2) + startDay;
+        var startTime;
+        var endTime;
+        if (eventType === 0) {
+            startTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + startDay));
+            if (endDay === startDay) {
+                endDay += 1;
+            }
+            endTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + endDay));
+            events.push({
+                title: 'All Day - ' + i,
+                startTime: startTime,
+                endTime: endTime,
+                allDay: true
+            });
+        } else {
+            var startMinute = Math.floor(Math.random() * 24 * 60);
+            var endMinute = Math.floor(Math.random() * 180) + startMinute;
+            startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + startDay, 0, date.getMinutes() + startMinute);
+            endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + endDay, 0, date.getMinutes() + endMinute);
+            events.push({
+                title: 'Event - ' + i,
+                startTime: startTime,
+                endTime: endTime,
+                allDay: false
+            });
+        }
     }
-    onViewTitleChanged(title) {
-      this.viewTitle = title;
-    }
-    onEventSelected(event) {
-      console.log('Event selected:' + event.startTime + '-' + event.endTime + ',' + event.title);
-    }
-    changeMode(mode) {
-      this.calendar.mode = mode;
-    }
-    today() {
-      this.calendar.currentDate = new Date();
-    }
-    onTimeSelected(ev) {
-      console.log('Selected time: ' + ev.selectedTime + ', hasEvents: ' +
-        (ev.events !== undefined && ev.events.length !== 0) + ', disabled: ' + ev.disabled);
-      this.selectedObject = ev
-      // this.openActionSheet(ev)
-    }
-    onCurrentDateChanged(event: Date) {
-      var today = new Date();
-      today.setHours(0, 0, 0, 0);
-      event.setHours(0, 0, 0, 0);
-      this.isToday = today.getTime() === event.getTime();
-  
-      this.selectedDay = event
-  
-    }
-  
-    onRangeChanged(ev) {
-      console.log('range changed: startTime: ' + ev.startTime + ', endTime: ' + ev.endTime);
-    }
-    markDisabled = (date: Date) => {
-      var current = new Date();
-      current.setHours(0, 0, 0);
-      return (date < current);
-    };
-  
-    openActionSheet(event) {
-      console.log('opening');
-    //   let actionsheet = this.actionSheetCtrl.create({
-    //     title: "Choose Option",
-    //     buttons: [
-    //       {
-    //         text: 'Block Date',
-    //         handler: () => {
-    //           console.log("Block Date Clicked: ", event);
-    //           let d = event.selectedTime;
-    //           //d.setHours(0, 0, 0);
-    //           setTimeout(() => {
-    //             this.blockDayEvent(d)
-    //           }, 2);
-    //         }
-    //       },
-    //       {
-    //         text: 'Meet Up With',
-    //         handler: function () {
-    //           console.log("Meet Up With Clicked");
-    //         }
-    //       }
-    //     ]
-    //   }); actionsheet.present();
-    }
-  
-    blockDayEvent(date) {
-      let startTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-  
-      let endTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate()));
-  
-      let events = this.eventSource;
-      events.push({
-        title: 'All Day ',
-        startTime: startTime,
-        endTime: endTime,
-        allDay: true
-      });
-      this.eventSource = [];
-      setTimeout(() => {
-        this.eventSource = events;
-      });
-    }
-  
-    addEvent() {
-    //   let modal = this.modalCtrl.create(EventModalPage, { selectedDay: this.selectedDay });
-    //   modal.present();
-    //   modal.onDidDismiss(data => {
-    //     if (data) {
-    //       let eventData = data;
-  
-    //       eventData.startTime = new Date(data.startTime);
-    //       eventData.endTime = new Date(data.endTime);
-  
-    //       let events = this.eventSource;
-    //       events.push(eventData);
-    //       this.eventSource = [];
-    //       setTimeout(() => {
-    //         this.eventSource = events;
-    //       });
-    //     }
-    //   });
-    }
-  
-    onOptionSelected($event: any) {
-      console.log($event)
-      //this.calendar.mode = $event
-    }
-  
+    return events;
+  }
 }
