@@ -1,3 +1,5 @@
 page-calendar {
-
+    .no-scroll > .scroll-content{
+        overflow: hidden;
+    }    
 }

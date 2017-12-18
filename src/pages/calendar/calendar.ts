@@ -1,7 +1,7 @@
-import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams } from 'ionic-angular';
+import { Component, ViewChild, TemplateRef } from '@angular/core';
+import { IonicPage, NavController, NavParams, Content} from 'ionic-angular';
 import { Mech } from '../../models/mech';
-
+import { MechServiceProvider } from '../../providers/mech-service/mech-service'
 /**
  * Generated class for the CalendarPage page.
  *
@@ -15,15 +15,24 @@ import { Mech } from '../../models/mech';
   templateUrl: 'calendar.html',
 })
 export class CalendarPage {
-  mechList:Array<Mech>
+  @ViewChild(Content) content: Content;
+  @ViewChild('templateMechList') mechListDom:TemplateRef<any>;
+  mechList:Array<Mech> = [];
+  eventSource:Array<any> = [];
   viewTitle:String
   calendar:any
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController, public navParams: NavParams, private mechService: MechServiceProvider) {
     this.calendar = {
       currentDate: new Date(),
-      locale: 'en-US'
+      locale: 'en-US',
+      dateFormatter: {
+        formatMonthViewDay: function(date:Date) {
+            return date.getDate().toString();
+        }            
+      }
     }
+    this.loadEvents();
   }
 
   onViewTitleChanged(title) {
@@ -35,44 +44,36 @@ export class CalendarPage {
   }
 
   loadEvents() {
-    this.mechList = this.createRandomEvents();
+    this.mechService.getScheduledMechineByMonth(new Date()).then(result => {
+      this.eventSource = result.map(mech => {
+        return {
+          title:mech.id,
+          startTime:mech.nextScheduleDate,
+          endTime:new Date(Date.UTC(mech.nextScheduleDate.getFullYear(),mech.nextScheduleDate.getUTCMonth(),mech.nextScheduleDate.getUTCDate()+1)),
+          allDay:true
+        }
+      })
+      this.mechList = result;
+    });
+  }
+
+  getMechByDate(input:Date) {
+    let inputUTCDate =  input.toLocaleDateString();
+    return this.mechList.filter(mech=>mech.nextScheduleDate.toLocaleDateString() == inputUTCDate)
   }
 
 
   createRandomEvents() {
-    var events = [];
-    for (var i = 0; i < 50; i += 1) {
-        var date = new Date();
-        var eventType = Math.floor(Math.random() * 2);
-        var startDay = Math.floor(Math.random() * 90) - 45;
-        var endDay = Math.floor(Math.random() * 2) + startDay;
-        var startTime;
-        var endTime;
-        if (eventType === 0) {
-            startTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + startDay));
-            if (endDay === startDay) {
-                endDay += 1;
-            }
-            endTime = new Date(Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate() + endDay));
-            events.push({
-                title: 'All Day - ' + i,
-                startTime: startTime,
-                endTime: endTime,
-                allDay: true
-            });
-        } else {
-            var startMinute = Math.floor(Math.random() * 24 * 60);
-            var endMinute = Math.floor(Math.random() * 180) + startMinute;
-            startTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + startDay, 0, date.getMinutes() + startMinute);
-            endTime = new Date(date.getFullYear(), date.getMonth(), date.getDate() + endDay, 0, date.getMinutes() + endMinute);
-            events.push({
-                title: 'Event - ' + i,
-                startTime: startTime,
-                endTime: endTime,
-                allDay: false
-            });
-        }
-    }
-    return events;
+    return new Promise<Array<Mech>>((resolve,reject)=>{
+      var events = [];
+      for (var i = 0; i < 100; i += 1) {
+          events.push(new Mech(i))
+      }
+      resolve(events)
+    })
+  }
+
+  itemSelected(item:Mech){
+    this.navCtrl.push('MechPage', {selectedMech: item});
   }
 }

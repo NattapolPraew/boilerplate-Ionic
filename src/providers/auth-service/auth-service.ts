@@ -13,32 +13,34 @@ import { User } from '../../models/user'
 export class AuthServiceProvider {
 
   public currentUser: User;
-  
+  private mockUser: User = new User('Simon', 'saimon@devdactic.com',3,'mockToken',['mockRole']);
   private isLoggedIn = false;
 
   constructor(public http: HttpClient) {
     console.log('Hello AuthServiceProvider Provider');
   }
   
-  public login(credentials) {
+  public login() {
     return new Promise((resolve, reject) => {
-      if (credentials.email === null || credentials.password === null) {
-        return reject("Please insert credentials");
-      } else {
-        let body = { username: credentials.email, password: credentials.password }
-        return this.http.post("http://localhost:8080/login/authenticate", body).toPromise().then(res=>{
-          let expireDate = res['token'].split(':')[1];        
-          this.currentUser = new User('Simon', 'saimon@devdactic.com',res["token"],res['roles']);
+      // if (credentials.email === null || credentials.password === null) {
+      //   return reject("Please insert credentials");
+      // } else {
+      //   let body = { username: credentials.email, password: credentials.password }
+      //   return this.http.post("http://localhost:8080/login/authenticate", body).toPromise().then(res=>{
+      //     let expireDate = res['token'].split(':')[1];        
+      //     this.currentUser = new User('Simon', 'saimon@devdactic.com',3,res["token"],res['roles']);
           
-          localStorage.setItem('authToken', this.currentUser.token);
-          localStorage.setItem('authExpire', expireDate);
-          this.isLoggedIn = true;
+      //     localStorage.setItem('authToken', this.currentUser.token);
+      //     localStorage.setItem('authExpire', expireDate);
+      //     this.isLoggedIn = true;
           
-          return resolve("Valid credentials")
-        }, error => {
-          return reject("Invalid credentials");
-        });
-      }
+      //     return resolve("Valid credentials")
+      //   }, error => {
+      //     return reject("Invalid credentials");
+      //   });
+      // }
+      this.currentUser = this.mockUser;
+      resolve("Valid credentials")
     });
   }
 
@@ -51,24 +53,27 @@ export class AuthServiceProvider {
 
   public async checkAuthenticate() {
     return new Promise((resolve, reject)=> {
-      if(localStorage.getItem('authToken') === null){
-        //Todo redirect to login page
-        return reject(new Error("Please login"))
-      }else{
-        if(parseInt(localStorage.getItem('authExpire')) > new Date().getTime()){
-          //request user by token
-          var headers = new HttpHeaders();
-          headers = headers.append("x-auth-token", this.getAuthToken());
-          return this.http.get("http://localhost:8080/login/getUserByToken",{headers}).toPromise().then(res => {
-            this.currentUser = new User('Simon', 'saimon@devdactic.com',res["token"],res['roles']);
-            this.isLoggedIn = true;
-            resolve(true)
-          });
-        } else {
-          //Todo redirect to login page
-          return reject(new Error("Please login"));
-        }
-      }
+      // if(localStorage.getItem('authToken') === null){
+      //   //Todo redirect to login page
+      //   return reject(new Error("Please login"))
+      // }else{
+      //   if(parseInt(localStorage.getItem('authExpire')) > new Date().getTime()){
+      //     //request user by token
+      //     var headers = new HttpHeaders();
+      //     headers = headers.append("x-auth-token", this.getAuthToken());
+      //     return this.http.get("http://localhost:8080/login/getUserByToken",{headers}).toPromise().then(res => {
+      //       this.currentUser = new User('Simon', 'saimon@devdactic.com',3,res["token"],res['roles']);
+      //       this.isLoggedIn = true;
+      //       resolve(true)
+      //     });
+      //   } else {
+      //     //Todo redirect to login page
+      //     return reject(new Error("Please login"));
+      //   }
+      // }
+
+      this.currentUser = this.mockUser;
+      resolve(true);
     });
   }
  

@@ -18,22 +18,31 @@
 </ion-header>
 
 
-<ion-content>
-    <ng-template #templateDate let-view="view" let-row="row" let-col="col">
-        {{view.dates[row*7+col].label}}
-    </ng-template>
-    <ng-template #templateInactiveDate let-view="view" let-row="row" let-col="col">
-        {{view.dates[row*7+col].label}}
-    </ng-template>
-    <ng-template #templateEventDetail let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
-      Test
-    </ng-template>
-    <calendar 
-    (onTitleChanged)="onViewTitleChanged($event)"
-    [monthviewDisplayEventTemplate]="templateDate"
-    [monthviewInactiveDisplayEventTemplate]="templateInactiveDate"
-    [monthviewEventDetailTemplate]="templateEventDetail"
-    [currentDate]="calendar.currentDate"
-    [locale]="calendar.locale" step="30">
-    </calendar>
+<ion-content class="no-scroll">
+  <div>
+      <ng-template #templateDate let-view="view" let-row="row" let-col="col">
+          {{view.dates[row*7+col].label}}
+      </ng-template>
+      <ng-template #templateInactiveDate let-view="view" let-row="row" let-col="col">
+          {{view.dates[row*7+col].label}}
+      </ng-template>
+      <ng-template #templateMechList let-showEventDetail="showEventDetail" let-selectedDate="selectedDate" let-noEventsLabel="noEventsLabel">
+        <ion-scroll [ngStyle]="{'height':content.contentHeight-262+'px'}" scrollY="true">
+            <ion-list no-margin>
+                <ion-item (click)="itemSelected(mech)" *ngFor="let mech of getMechByDate(selectedDate.date)" >
+                  Mechine ID: {{mech.id}} -- {{mech.nextScheduleDate.toLocaleDateString()}} - {{mech.nextScheduleDate.toLocaleTimeString()}}
+                </ion-item>
+              </ion-list>
+        </ion-scroll>
+      </ng-template>
+      <calendar
+      (onTitleChanged)="onViewTitleChanged($event)"
+      [monthviewInactiveDisplayEventTemplate]="templateInactiveDate"
+      [monthviewEventDetailTemplate]="templateMechList"
+      [eventSource]="eventSource"
+      [currentDate]="calendar.currentDate"
+      [dateFormatter]="calendar.dateFormatter"
+      [locale]="calendar.locale" step="30">
+      </calendar>
+  </div>
 </ion-content>

@@ -12,6 +12,8 @@ import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 
 import { registerLocaleData } from '@angular/common';
 import localeEn from '@angular/common/locales/en';
+import { MechServiceProvider } from '../providers/mech-service/mech-service';
+import { SiteServiceProvider } from '../providers/site-service/site-service';
 registerLocaleData(localeEn);
 
 
@@ -35,6 +37,8 @@ registerLocaleData(localeEn);
     {provide: LOCALE_ID, useValue: 'en-US'},
     ReportServiceProvider,
     AuthServiceProvider,
+    MechServiceProvider,
+    SiteServiceProvider,
   ]
 })
 export class AppModule {}

@@ -2,6 +2,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Nav, Platform } from 'ionic-angular';
 import { StatusBar } from '@ionic-native/status-bar';
 import { SplashScreen } from '@ionic-native/splash-screen';
+import { AuthServiceProvider } from '../providers/auth-service/auth-service';
 
 
 // import { HomePage } from '../pages/home/home';
@@ -18,20 +19,23 @@ export class MyApp {
 
   pages: Array<{title: string, component: string}>;
 
-  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen) {
+  constructor(platform: Platform, statusBar: StatusBar, splashScreen: SplashScreen, private authService:AuthServiceProvider) {
+    
     platform.ready().then(() => {
-      // Okay, so the platform is ready and our plugins are available.
-      // Here you can do any higher level native things you might need.
-      statusBar.styleDefault();
-      splashScreen.hide();
-    });
+        // Okay, so the platform is ready and our plugins are available.
+        // Here you can do any higher level native things you might need.
+      authService.checkAuthenticate().then(result => {
+        statusBar.styleDefault();
+        splashScreen.hide();
+      });
+    })
 
     this.pages = [
       { title: 'Home', component: 'HomePage' },
       { title: 'Reports', component: 'ReportPage' },
       { title: 'Profile', component: 'ProfilePage' },
       { title: 'Logout', component: 'LoginPage' },
-      { title: 'Calendar', component: 'CalendarPage' }
+      { title: 'Schedule', component: 'CalendarPage' }
     ];
   }
 
