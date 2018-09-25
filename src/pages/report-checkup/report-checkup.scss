@@ -1,6 +1,8 @@
 page-report-checkup {
-
-    ion-icon {
+    .expandable-label {
         z-index: 1;
+    }
+    ion-select {
+        width: 120px;
     }
 }

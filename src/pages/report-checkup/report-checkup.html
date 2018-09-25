@@ -18,36 +18,30 @@
     <ion-list-header>
       Ionic 2 Accordion Example.
     </ion-list-header>
-    <ion-item>
+    <ion-item (click)="toggleDetails(testSelect)">
           <ion-select interface="popover" [(ngModel)]="gender">
             <ion-option value="f">Female</ion-option>
             <ion-option value="m">Male</ion-option>
           </ion-select>
-          <ion-label>
-              <div>
-                Selector
-              </div>
-              <expandable [expanded]="testSelect.showDetails">
-                  <div>
-                      Lorem ipsum dolor sit amet consectetur, adipisicing elit. Impedit, enim. Quia assumenda molestiae amet vitae reprehenderit officia delectus. Error numquam eveniet omnis perspiciatis qui porro quis accusantium aut delectus facere!
-                  </div>   
-              </expandable>
+          <ion-label class="expandable-label">
+            <div>
+                {{testSelect.title}} <ion-icon no-margin padding-left *ngIf="!testSelect.showDetails" color="grey" name='ios-information-circle-outline'></ion-icon>
+            </div>
+            <expandable [expanded]="testSelect.showDetails">
+                {{testSelect.details}}
+            </expandable>
           </ion-label>
-          <ion-icon item-left [name]="testSelect.icon" (click)="toggleDetails(testSelect)"></ion-icon>
     </ion-item>
       <ion-item no-margin text-wrap *ngFor="let d of data" (click)="toggleDetails(d)">
-        <ion-checkbox item-right [(ngModel)]="d.checked"></ion-checkbox>
-        <ion-label>
+        <ion-checkbox padding-left item-right [(ngModel)]="d.checked"></ion-checkbox>
+        <ion-label class="expandable-label">
           <div>
-              {{d.title}}
+              {{d.title}} <ion-icon no-margin padding-left *ngIf="!d.showDetails" color="grey" name='ios-information-circle-outline'></ion-icon>
           </div>
           <expandable [expanded]="d.showDetails">
-              <div>
-                  {{d.details}} 
-              </div>   
+              {{d.details}}
           </expandable>
         </ion-label>
-        <ion-icon item-left [name]="d.icon"></ion-icon>
       </ion-item>
       <button ion-item color="light" text-center (click)="presentConfirm()">Send</button>
   </ion-list>
